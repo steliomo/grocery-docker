@@ -13,7 +13,7 @@ services:
             - type: bind
               source: /opt/grocery/data
               target: /usr/local/apache2/htdocs
-            - type:
+            - type: bind
               source: /etc/letsencrypt/live
               targert: /etc/letsencrypt/live
         depends_on:
