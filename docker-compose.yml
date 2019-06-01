@@ -1,0 +1,60 @@
+version: '3.2'
+services:
+    grocery-web:
+        build:
+            context: ./apache
+        container_name: grocery-web
+        ports:
+            - "80:80"
+            - "443:443"
+        networks: 
+            - network
+        volumes:
+            - type: bind
+              source: /opt/grocery/data
+              target: /usr/local/apache2/htdocs
+        depends_on:
+            - "grocery-integ"
+        restart: unless-stopped
+    
+    grocery-integ:
+        build:
+            context: .
+            dockerfile: ./integ/Dockerfile
+        container_name: grocery-integ
+        ports:
+            - "8082:8080"
+            - "8002:8000"
+        networks: 
+            - network
+            - account-manager_network
+        depends_on: 
+            - "grocery-db"
+        volumes: 
+          - type: bind
+            source: /opt/grocery/data
+            target: /opt/grocery/data
+        restart: unless-stopped
+
+    grocery-db:
+        build: 
+            context: ./database
+        container_name: grocery-db
+        ports: 
+            - "3309:3306"
+        networks: 
+            - network
+        volumes:
+            - type: volume
+              source: dbdata
+              target: /opt/grocery/data
+        restart: unless-stopped
+
+networks: 
+  network:
+    driver: bridge
+  account-manager_network:
+    external: true
+
+volumes:
+  dbdata:
