@@ -30,7 +30,7 @@ services:
             - "8002:8000"
         networks: 
             - network
-            - account-manager_network
+            - accountmanager_network
         depends_on: 
             - "grocery-db"
         volumes: 
@@ -56,7 +56,7 @@ services:
 networks: 
   network:
     driver: bridge
-  account-manager_network:
+  accountmanager_network:
     external: true
 
 volumes:
